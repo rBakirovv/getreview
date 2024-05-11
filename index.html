@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 </head>
 
 <body>
@@ -21,12 +22,18 @@
       <h6>Test!</h6>
       <p>test[!]</p>
     </div>
-    <video autoplay muted controls class="getreview-widget__video">
-      <source src="./Пилот получил привлекательное предложение от картеля.mp4" type="video/mp4">
-    </video>
+    <a href="https://vimeo.com/115041822" class="glightbox-widget">
+      <video autoplay muted controls class="getreview-widget__video">
+        <source src="./Пилот получил привлекательное предложение от картеля.mp4" type="video/mp4">
+      </video>
+    </a>
   </div>
   <script src="./getreview.js"></script>
   <!--<script src="https://app.getreview.io/tags/QuwFmsTZu6XF7pfW/sdk.js" async></script>-->
+  <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+  <script type="module">
+    const lightbox = GLightbox({ selector: '.glightbox-widget' });
+  </script>
 </body>
 <style>
   body {
@@ -130,9 +137,20 @@
     background-color: rgba(0, 0, 0, 0.41);
   }
 
-  .getreview-widget__close > svg {
+  .getreview-widget__close>svg {
     width: 22px !important;
     height: 22px !important;
+  }
+
+  @media screen and (max-width: 500px) {
+    .getreview-widget {
+      width: 100px;
+      min-width: 100px;
+      height: 150px;
+      min-height: 150px;
+      bottom: 25px;
+      right: 25px;
+    }
   }
 </style>
 
