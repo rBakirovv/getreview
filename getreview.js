@@ -25,17 +25,15 @@ window.addEventListener("DOMContentLoaded", function () {
     `);
 
   const widget = document.querySelector(".getreview-widget");
-  const widgetClose = widget.querySelector(".getreview-widget__close");
+  const widgetClose = widget && widget.querySelector(".getreview-widget__close");
 
   /* Настройки glightbox */
   const lightbox = GLightbox({
     selector: '.glightbox-widget'
   });
 
-  widgetClose && widgetClose.addEventListener("click", () => {
-    if (!widget.classList.contains("active")) {
-      widget.classList.add("dis-none");
-    }
+  widgetClose && widgetClose.addEventListener("click", (e) => {
+    widget.classList.add("dis-none");
   })
 
   function getDeviceType() {

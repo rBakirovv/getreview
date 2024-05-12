@@ -17,6 +17,13 @@
   cursor: pointer;
 }
 
+.active.getreview-widget {
+  width: 285px;
+  height: 506px;
+  min-width: 285px;
+  min-height: 506px;
+}
+
 .getreview-widget.right {
   right: 50px;
   bottom: 50px;
@@ -72,6 +79,10 @@
   margin-bottom: 0 !important;
 }
 
+.getreview-widget__text {
+  pointer-events: none;
+}
+
 .getreview-widget p {
   font-weight: bold;
   color: white;
@@ -82,6 +93,11 @@
   line-height: normal;
   margin: .25rem 0 0;
   pointer-events: none;
+  cursor: default;
+}
+
+.active.getreview-widget p {
+  font-size: 14px;
 }
 
 .getreview-widget h6 {
@@ -91,7 +107,12 @@
   font-size: 12px;
   line-height: normal;
   margin: .25rem 0 0;
+  cursor: default;
   pointer-events: none;
+}
+
+.active.getreview-widget h6 {
+  font-size: 16px;
 }
 
 .getreview-widget__close {
@@ -106,7 +127,11 @@
   -webkit-tap-highlight-color: transparent;
   border-radius: 22px;
   opacity: 0;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.21);
+}
+
+.getreview-widget__close>* {
+  pointer-events: none;
 }
 
 .getreview-widget:hover .getreview-widget__close {
@@ -117,15 +142,19 @@
   opacity: 1;
 }
 
+.active .getreview-widget__close {
+  opacity: 1;
+}
+
 @media (hover: hover) {
   .getreview-widget__close:hover {
-    background-color: rgba(0, 0, 0, 1);
+    background-color: rgba(0, 0, 0, 0.8);
   }
 }
 
 @media (hover: none) {
   .getreview-widget__close:active {
-    background-color: rgba(0, 0, 0, 1);
+    background-color: rgba(0, 0, 0, 0.8);
   }
 }
 
