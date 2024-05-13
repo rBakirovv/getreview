@@ -6,19 +6,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <!-- Подключить cтили glightbox [!] -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+  <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />-->
   <!-- Подключить стили виджета [!] -->
   <link rel="stylesheet" href="./getreview.css">
 </head>
 
 <body>
   <!-- Подключить скрипт glightbox [!] -->
-  <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+  <!--<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>-->
   <!-- Вставить этот <script> перед подключением скрипта виджета [!]  -->
   <script>
     //  Опции для виджета.
     let optionsGetreview = {
       position: "left", // left или right, по дефолту будет left
+      positionMobile: "right", // left или right на моб., по дефолту будет повторять position
+      sideIndentation: 50, // Отступ сбоку, число
+      bottomIndentation: 50, // Отступ снизу, число
+      sideIndentationMobile: 25, // Отступ сбоку на моб., число, по дефолту будет 25px
+      bottomIndentationMobile: 25, // Отступ снизу на моб., число, по дефолту будет 25px
       videoSrc: "https://youtu.be/0i23m2720DM?si=oRCMopHCMRLlhaJI", // нужно задать обязательно [!]
       previewSrc: "./Пилот получил привлекательное предложение от картеля.mp4", // по дефолту будет равно videoSrc
       title: "Текст", // заголовок, можно не задавать

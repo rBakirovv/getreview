@@ -24,16 +24,6 @@
   min-height: 506px;
 }
 
-.getreview-widget.right {
-  right: 50px;
-  bottom: 50px;
-}
-
-.getreview-widget.left {
-  left: 50px;
-  bottom: 50px;
-}
-
 @media (hover: hover) {
   .getreview-widget:hover {
     border: 3px solid rgb(25 0 84);
@@ -169,18 +159,6 @@
     min-width: 100px;
     height: 150px;
     min-height: 150px;
-    bottom: 25px;
-    right: 25px;
-  }
-
-  .getreview-widget.right {
-    bottom: 25px;
-    right: 25px;
-  }
-
-  .getreview-widget.left {
-    bottom: 25px;
-    left: 25px;
   }
 
   .getreview-widget__text {

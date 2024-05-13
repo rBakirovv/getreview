@@ -3,7 +3,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
   body.insertAdjacentHTML('beforeEnd',
     `
-      <div class="getreview-widget ${(optionsGetreview.position && optionsGetreview.position !== '') ? optionsGetreview.position : 'left'}">
+      <div class="getreview-widget">
         <div class="getreview-widget__close">
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="17" y="30" width="18" height="2" rx="1" transform="rotate(-45 17 30)" fill="rgba(255, 255, 255, 1)">
@@ -28,9 +28,9 @@ window.addEventListener("DOMContentLoaded", function () {
   const widgetClose = widget && widget.querySelector(".getreview-widget__close");
 
   /* Настройки glightbox */
-  const lightbox = GLightbox({
-    selector: '.glightbox-widget'
-  });
+  //const lightbox = GLightbox({
+  //selector: '.glightbox-widget'
+  //});
 
   widgetClose && widgetClose.addEventListener("click", (e) => {
     widget.classList.add("dis-none");
@@ -50,4 +50,91 @@ window.addEventListener("DOMContentLoaded", function () {
   if (getDeviceType() === "mobile") {
     widget.classList.add("mobile");
   }
+
+  function sideIndentationHandler() {
+    if (optionsGetreview.position === 'left') {
+      if (optionsGetreview.sideIndentation) {
+        widget.style.right = `initial`;
+        widget.style.left = `${optionsGetreview.sideIndentation}px`;
+      } else {
+        widget.style.right = `initial`;
+        widget.style.left = `50px`;
+      }
+    } else if (optionsGetreview.position === 'right') {
+      if (optionsGetreview.sideIndentation) {
+        widget.style.left = `initial`;
+        widget.style.right = `${optionsGetreview.sideIndentation}px`;
+      } else {
+        widget.style.left = `initial`;
+        widget.style.right = `50px`;
+      }
+    }
+  }
+
+  sideIndentationHandler();
+
+  function mobileSideIndentationHandler() {
+    if (window.innerWidth <= 500) {
+      if (optionsGetreview.positionMobile === 'left') {
+        if (optionsGetreview.sideIndentationMobile) {
+          widget.style.right = `initial`;
+          widget.style.left = `${optionsGetreview.sideIndentationMobile}px`;
+        } else {
+          widget.style.right = `initial`;
+          widget.style.left = `25px`;
+        }
+      } else if (optionsGetreview.positionMobile === 'right') {
+        if (optionsGetreview.sideIndentationMobile) {
+          widget.style.left = `initial`;
+          widget.style.right = `${optionsGetreview.sideIndentationMobile}px`;
+        } else {
+          widget.style.left = `initial`;
+          widget.style.right = `25px`;
+        }
+      } else if (!optionsGetreview.positionMobile || optionsGetreview.positionMobile === '') {
+        if (optionsGetreview.position === 'left') {
+          widget.style.right = `initial`;
+          widget.style.left = `25px`;
+        } else if (optionsGetreview.position === 'right') {
+          widget.style.left = `initial`;
+          widget.style.right = `25px`;
+        }
+      }
+    } else {
+      sideIndentationHandler();
+    }
+  }
+
+  mobileSideIndentationHandler();
+
+  function bottomIndentationHandler() {
+    if (optionsGetreview.sideIndentation) {
+      widget.style.bottom = `${optionsGetreview.sideIndentation}px`;
+    } else {
+      widget.style.bottom = `50px`;
+    }
+  }
+
+  bottomIndentationHandler();
+
+  function mobileBottomIndentationHandler() {
+    if (window.innerWidth <= 500) {
+      if (optionsGetreview.bottomIndentationMobile) {
+        widget.style.bottom = `${optionsGetreview.bottomIndentationMobile}px`;
+      } else {
+        widget.style.bottom = `25px`;
+      }
+    } else {
+      bottomIndentationHandler();
+    }
+  }
+
+  mobileBottomIndentationHandler()
+
+  window.addEventListener("resize", () => {
+    setTimeout(() => {
+      mobileSideIndentationHandler();
+      mobileBottomIndentationHandler();
+    }, 500)
+  })
 })
