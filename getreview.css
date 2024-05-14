@@ -1,3 +1,7 @@
+:root {
+  --hover-getreview-border: rgb(25 0 84);
+}
+
 .dis-none {
   display: none !important;
 }
@@ -24,7 +28,7 @@
 
 @media (hover: hover) {
   .getreview-widget:hover {
-    border: 3px solid rgb(25 0 84);
+    border: 3px solid var(--hover-getreview-border);
     transform: scale(1.05);
   }
 }
@@ -196,17 +200,6 @@
 
 #videotube-modal {
   text-align: center;
-  box-shadow: 0 0 40px #333;
-}
-
-#videotube-modal-loading {
-  position: fixed;
-  z-index: 997;
-  font-size: 1.5em;
-  top: 49%;
-  width: 5%;
-  text-align: center;
-  left: 45%;
 }
 
 #videotube-modal-close {
@@ -236,4 +229,37 @@
 
 #videotube-modal-close:hover path {
   opacity: 1;
+}
+
+/* iframe в углу */
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.getreview-widget__video-wrap {
+  position: fixed;
+  transform: translateY(150%);
+}
+
+.active.getreview-widget__video-wrap {
+  animation: fade-in-up .25s ease forwards;
+}
+
+.getreview-widget__video-wrap .getreview-widget__close {
+  top: -30px;
+  left: 0px;
+  right: initial;
+}
+
+.getreview-widget__iframe-container iframe {
+  max-width: 100%;
+  max-height: 100%;
 }

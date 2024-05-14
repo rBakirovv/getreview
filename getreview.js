@@ -171,7 +171,6 @@ const init = () => {
     overlay.insertAdjacentHTML(
       'beforeend',
       `
-			<div id="videotube-modal-loading">Загрузка...</div>
 			<div id="videotube-modal-close">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" xml:space="preserve"><g><g><path d="M505.943,6.058c-8.077-8.077-21.172-8.077-29.249,0L6.058,476.693c-8.077,8.077-8.077,21.172,0,29.249C10.096,509.982,15.39,512,20.683,512c5.293,0,10.586-2.019,14.625-6.059L505.943,35.306C514.019,27.23,514.019,14.135,505.943,6.058z"></path></g></g><g><g><path d="M505.942,476.694L35.306,6.059c-8.076-8.077-21.172-8.077-29.248,0c-8.077,8.076-8.077,21.171,0,29.248l470.636,470.636c4.038,4.039,9.332,6.058,14.625,6.058c5.293,0,10.587-2.019,14.624-6.057C514.018,497.866,514.018,484.771,505.942,476.694z"></path></g></g></svg>
       </div>
@@ -201,6 +200,11 @@ window.addEventListener("DOMContentLoaded", function () {
 
   const body = document.querySelector("body");
 
+  const searchIframe = optionsGetreview.videoSrc.includes('youtube');
+  let idVideoIframe = searchIframe ?
+    optionsGetreview.videoSrc.match(/(\?|&)v=([^&]+)/)[2] :
+    optionsGetreview.videoSrc.match(/(\.be\/)([^&]+)/)[2];
+
   body.insertAdjacentHTML('beforeEnd',
     `
       <div class="getreview-widget">
@@ -216,23 +220,43 @@ window.addEventListener("DOMContentLoaded", function () {
           <h6>${(optionsGetreview.title && optionsGetreview.title !== '') ? optionsGetreview.title : ''}</h6>
           <p>${(optionsGetreview.subtitle && optionsGetreview.subtitle !== '') ? optionsGetreview.subtitle : ''}</p>
         </div>
-        <a href="${optionsGetreview.videoSrc}" class="getreview__video-container ${optionsGetreview.lightbox === 'videotube' ? "tube" : 'glightbox-widget'}">
+        <a href="${optionsGetreview.videoSrc}" class="getreview__video-container ${optionsGetreview.lightbox === 'videotube' ? "tube" : optionsGetreview.lightbox === 'glightbox' ? 'glightbox-widget' : 'iframe'}">
           <video preload="none" autoplay playsinline loop muted class="getreview-widget__video">
             <source src="${(optionsGetreview.previewSrc && optionsGetreview.previewSrc !== '') ? optionsGetreview.previewSrc : optionsGetreview.videoSrc}" type="video/mp4">
           </video>
         </a>
+      </div>
+      <div class="getreview-widget__video-wrap">
+        <div class="getreview-widget__close">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="17" y="30" width="18" height="2" rx="1" transform="rotate(-45 17 30)" fill="rgba(255, 255, 255, 1)">
+            </rect>
+            <rect width="18" height="2" rx="1" transform="matrix(-0.707107 -0.707107 -0.707107 0.707107 31 30)"
+              fill="rgba(255, 255, 255, 1)"></rect>
+          </svg>
+        </div>
+        <div class="getreview-widget__iframe-container ${optionsGetreview.lightbox === 'iframe' ? '' : 'dis-none'}">
+          <iframe width="${optionsGetreview.iframeWidth ? optionsGetreview.iframeWidth : 260}" height="${optionsGetreview.iframeHeight ? optionsGetreview.iframeHeight : 145}"  ${optionsGetreview.lightbox === 'iframe' ? `src="https://youtube.com/embed/${idVideoIframe}?autoplay=1"` : ''}  frameborder="0" allow="autoplay" allowfullscreen></iframe>
+        </div>
       </div>
     `);
 
   const widget = document.querySelector(".getreview-widget");
   const widgetClose = widget && widget.querySelector(".getreview-widget__close");
   const widgetVideo = widget && widget.querySelector("video");
+  const widgetVideoWrap = document.querySelector(".getreview-widget__video-wrap");
+  const widgetVideoContainer = widget.querySelector(".getreview__video-container.iframe");
+  const widgetVideoWrapClose = widgetVideoWrap.querySelector(".getreview-widget__close");
 
   /* Настройки glightbox */
   if (optionsGetreview.lightbox === "glightbox") {
     const lightbox = GLightbox({
       selector: '.glightbox-widget'
     });
+  }
+
+  if (optionsGetreview.borderHover && optionsGetreview.borderHover !== "") {
+    document.documentElement.style.setProperty('--hover-getreview-border', `${optionsGetreview.borderHover}`);
   }
 
   var videoSource = widgetVideo.querySelector("source");
@@ -267,17 +291,29 @@ window.addEventListener("DOMContentLoaded", function () {
       if (optionsGetreview.sideIndentation) {
         widget.style.right = `initial`;
         widget.style.left = `${optionsGetreview.sideIndentation}px`;
+
+        widgetVideoWrap.style.right = `initial`;
+        widgetVideoWrap.style.left = `${optionsGetreview.sideIndentation}px`;
       } else {
         widget.style.right = `initial`;
         widget.style.left = `50px`;
+
+        widgetVideoWrap.style.right = `initial`;
+        widgetVideoWrap.style.left = `50px`;
       }
     } else if (optionsGetreview.position === 'right') {
       if (optionsGetreview.sideIndentation) {
         widget.style.left = `initial`;
         widget.style.right = `${optionsGetreview.sideIndentation}px`;
+
+        widgetVideoWrap.style.left = `initial`;
+        widgetVideoWrap.style.right = `${optionsGetreview.sideIndentation}px`;
       } else {
         widget.style.left = `initial`;
         widget.style.right = `50px`;
+
+        widgetVideoWrap.style.left = `initial`;
+        widgetVideoWrap.style.right = `50px`;
       }
     }
   }
@@ -290,25 +326,43 @@ window.addEventListener("DOMContentLoaded", function () {
         if (optionsGetreview.sideIndentationMobile) {
           widget.style.right = `initial`;
           widget.style.left = `${optionsGetreview.sideIndentationMobile}px`;
+
+          widgetVideoWrap.style.right = `initial`;
+          widgetVideoWrap.style.left = `${optionsGetreview.sideIndentationMobile}px`;
         } else {
           widget.style.right = `initial`;
           widget.style.left = `25px`;
+
+          widgetVideoWrap.style.right = `initial`;
+          widgetVideoWrap.style.left = `25px`;
         }
       } else if (optionsGetreview.positionMobile === 'right') {
         if (optionsGetreview.sideIndentationMobile) {
           widget.style.left = `initial`;
           widget.style.right = `${optionsGetreview.sideIndentationMobile}px`;
+
+          widgetVideoWrap.style.left = `initial`;
+          widgetVideoWrap.style.right = `${optionsGetreview.sideIndentationMobile}px`;
         } else {
           widget.style.left = `initial`;
           widget.style.right = `25px`;
+
+          widgetVideoWrap.style.left = `initial`;
+          widgetVideoWrap.style.right = `25px`;
         }
       } else if (!optionsGetreview.positionMobile || optionsGetreview.positionMobile === '') {
         if (optionsGetreview.position === 'left') {
           widget.style.right = `initial`;
           widget.style.left = `25px`;
+
+          widgetVideoWrap.style.right = `initial`;
+          widgetVideoWrap.style.left = `25px`;
         } else if (optionsGetreview.position === 'right') {
           widget.style.left = `initial`;
           widget.style.right = `25px`;
+
+          widgetVideoWrap.style.left = `initial`;
+          widgetVideoWrap.style.right = `25px`;
         }
       }
     } else {
@@ -321,8 +375,12 @@ window.addEventListener("DOMContentLoaded", function () {
   function bottomIndentationHandler() {
     if (optionsGetreview.sideIndentation) {
       widget.style.bottom = `${optionsGetreview.sideIndentation}px`;
+
+      widgetVideoWrap.style.bottom = `${optionsGetreview.sideIndentation}px`;
     } else {
       widget.style.bottom = `50px`;
+
+      widgetVideoWrap.style.bottom = `50px`;
     }
   }
 
@@ -332,15 +390,33 @@ window.addEventListener("DOMContentLoaded", function () {
     if (window.innerWidth <= 500) {
       if (optionsGetreview.bottomIndentationMobile) {
         widget.style.bottom = `${optionsGetreview.bottomIndentationMobile}px`;
+
+        widgetVideoWrap.style.bottom = `${optionsGetreview.bottomIndentationMobile}px`;
       } else {
         widget.style.bottom = `25px`;
+
+        widgetVideoWrap.style.bottom = `25px`;
       }
     } else {
       bottomIndentationHandler();
     }
   }
 
-  mobileBottomIndentationHandler()
+  mobileBottomIndentationHandler();
+
+  if (optionsGetreview.lightbox === 'iframe') {
+    widgetVideoContainer && widgetVideoContainer.addEventListener(("click"), (e) => {
+      e.preventDefault();
+
+      widget.classList.add("dis-none");
+      widgetVideoWrap.classList.add("active");
+    })
+  }
+
+  widgetVideoWrapClose && widgetVideoWrapClose.addEventListener("click", () => {
+    widget.classList.remove("dis-none");
+    widgetVideoWrap.classList.remove("active");
+  })
 
   window.addEventListener("resize", () => {
     setTimeout(() => {
