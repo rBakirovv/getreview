@@ -5,14 +5,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <!-- Подключить cтили glightbox [!] -->
+  <!-- Подключить cтили glightbox (опционально) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
   <!-- Подключить стили виджета [!] -->
   <link rel="stylesheet" href="./getreview.css">
 </head>
 
 <body>
-  <!-- Подключить скрипт glightbox [!] -->
+  <!-- Подключить скрипт glightbox (опционально) -->
   <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
   <!-- Вставить этот <script> перед подключением скрипта виджета [!]  -->
   <script>
@@ -28,6 +28,7 @@
       previewSrc: "./Пилот получил привлекательное предложение от картеля.mp4", // по дефолту будет равно videoSrc
       title: "Текст", // заголовок, можно не задавать
       subtitle: "Ещё текст", // подзаголовок, можно не задавать
+      lightbox: "videotube", // модалка (videotube или glightbox). Оставил вариант с glightbox. В таком случае нужно будет подключать его
     }
   </script>
   <!-- Подключить скрипт виджета [!] -->
