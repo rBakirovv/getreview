@@ -1,3 +1,11 @@
+var tag = document.createElement('script');
+
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+var player;
+
 (() => {
   const throttle = (type, name, obj) => {
     obj = obj || window;
@@ -76,6 +84,8 @@ const init = () => {
   overlay.className = 'videotube-modal-overlay';
   document.body.insertAdjacentElement('beforeend', overlay);
 
+  const videotubeModalOverlay = document.querySelector(".videotube-modal-overlay");
+
   const video = document.createElement('div');
   video.id = 'videotube-modal-container';
 
@@ -94,7 +104,7 @@ const init = () => {
       sizeBlockList.find(item => item[0] < window.visualViewport.width) ||
       sizeBlockList[sizeBlockList.length - 1];
 
-    const iframe = document.getElementById('videotube-modal');
+    const iframe = document.getElementById('videotube-modal-container');
     iframe.width = sizeBlock[0];
     iframe.height = sizeBlock[1];
     video.style.cssText = `
@@ -120,6 +130,7 @@ const init = () => {
   };
 
   const closeVideoTubeModal = () => {
+    videotubeModalOverlay.style.pointerEvents = 'none';
     animation(
       overlay, {
         end: [
@@ -130,10 +141,13 @@ const init = () => {
         ],
         count: 20,
       },
-      () => {
-        overlay.textContent = '';
-      },
+      //() => {
+      //overlay.textContent = '';
+      //},
     );
+
+    player.pauseVideo();
+
     window.removeEventListener('optimizedResize', sizeVideoTubeModal);
     document.removeEventListener('keyup', closeContainerEsc);
   };
@@ -145,6 +159,10 @@ const init = () => {
   };
 
   const openVideoTubeModal = e => {
+    if (e.target.closest(".tube")) {
+      videotubeModalOverlay.style.pointerEvents = 'all';
+    }
+
     const target = e.target.closest('.tube');
     if (!target) return;
 
@@ -168,22 +186,42 @@ const init = () => {
       count: 20,
     });
 
-    overlay.insertAdjacentHTML(
-      'beforeend',
-      `
-			<div id="videotube-modal-close">
-        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" xml:space="preserve"><g><g><path d="M505.943,6.058c-8.077-8.077-21.172-8.077-29.249,0L6.058,476.693c-8.077,8.077-8.077,21.172,0,29.249C10.096,509.982,15.39,512,20.683,512c5.293,0,10.586-2.019,14.625-6.059L505.943,35.306C514.019,27.23,514.019,14.135,505.943,6.058z"></path></g></g><g><g><path d="M505.942,476.694L35.306,6.059c-8.076-8.077-21.172-8.077-29.248,0c-8.077,8.076-8.077,21.171,0,29.248l470.636,470.636c4.038,4.039,9.332,6.058,14.625,6.058c5.293,0,10.587-2.019,14.624-6.057C514.018,497.866,514.018,484.771,505.942,476.694z"></path></g></g></svg>
-      </div>
-			<div id="videotube-modal-container">
-				<iframe src="https://youtube.com/embed/${idVideo}?autoplay=1" 
-					frameborder="0"
-					id="videotube-modal" 
-					allowfullscreen
-					allow="autoplay">
-				</iframe>
-			</div>
-		`,
-    );
+    if (!document.querySelector("#videotube-modal-container")) {
+      overlay.insertAdjacentHTML(
+        'beforeend',
+        `
+        <div id="videotube-modal-close">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" xml:space="preserve"><g><g><path d="M505.943,6.058c-8.077-8.077-21.172-8.077-29.249,0L6.058,476.693c-8.077,8.077-8.077,21.172,0,29.249C10.096,509.982,15.39,512,20.683,512c5.293,0,10.586-2.019,14.625-6.059L505.943,35.306C514.019,27.23,514.019,14.135,505.943,6.058z"></path></g></g><g><g><path d="M505.942,476.694L35.306,6.059c-8.076-8.077-21.172-8.077-29.248,0c-8.077,8.076-8.077,21.171,0,29.248l470.636,470.636c4.038,4.039,9.332,6.058,14.625,6.058c5.293,0,10.587-2.019,14.624-6.057C514.018,497.866,514.018,484.771,505.942,476.694z"></path></g></g></svg>
+        </div>
+        <div id="videotube-modal-container">
+        </div>
+      `,
+      );
+    }
+
+    if (player) {
+      player.playVideo();
+    } else {
+      player = new YT.Player('videotube-modal-container', {
+
+        playerVars: {
+          'controls': 0,
+          'showinfo': 0,
+          'rel': 0,
+          'autoplay': 0,
+          'playsinline': 1
+        },
+        videoId: idVideo,
+        events: {
+          'onReady': onPlayerReady,
+        }
+      });
+    }
+
+
+    function onPlayerReady() {
+      player.playVideo();
+    }
 
     sizeVideo();
     sizeContainer();
