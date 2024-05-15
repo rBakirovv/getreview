@@ -4,8 +4,8 @@
 
 ## Подключение
 
-* Подключить getreview.css и getreview.js
-* Перед getreview.js:
+* Подключить getreview.min.css и getreview.min.js
+* Перед getreview.min.js:
 
   ````
   <script>
@@ -21,7 +21,7 @@
       previewSrc: "./Пилот получил привлекательное предложение от картеля.mp4", // по дефолту будет равно videoSrc
       title: "Текст", // заголовок, можно не задавать
       subtitle: "Ещё текст", // подзаголовок, можно не задавать
-      lightbox: "videotube", // модалка (videotube или glightbox). Оставил вариант с glightbox. В таком случае нужно будет подключать его
+      lightbox: "videotube", // модалка videotube или фикс. баннер iframe
     }
   </script>
   ````
