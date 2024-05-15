@@ -141,9 +141,6 @@ const init = () => {
         ],
         count: 20,
       },
-      //() => {
-      //overlay.textContent = '';
-      //},
     );
 
     player.pauseVideo();
@@ -218,7 +215,6 @@ const init = () => {
       });
     }
 
-
     function onPlayerReady() {
       player.playVideo();
     }
@@ -258,7 +254,7 @@ window.addEventListener("DOMContentLoaded", function () {
           <h6>${(optionsGetreview.title && optionsGetreview.title !== '') ? optionsGetreview.title : ''}</h6>
           <p>${(optionsGetreview.subtitle && optionsGetreview.subtitle !== '') ? optionsGetreview.subtitle : ''}</p>
         </div>
-        <a href="${optionsGetreview.videoSrc}" class="getreview__video-container ${optionsGetreview.lightbox === 'videotube' ? "tube" : optionsGetreview.lightbox === 'glightbox' ? 'glightbox-widget' : 'iframe'}">
+        <a href="${optionsGetreview.videoSrc}" class="getreview__video-container ${optionsGetreview.lightbox === 'videotube' ? "tube" : 'iframe'}">
           <video preload="none" autoplay playsinline loop muted class="getreview-widget__video">
             <source src="${(optionsGetreview.previewSrc && optionsGetreview.previewSrc !== '') ? optionsGetreview.previewSrc : optionsGetreview.videoSrc}" type="video/mp4">
           </video>
@@ -273,9 +269,7 @@ window.addEventListener("DOMContentLoaded", function () {
               fill="rgba(255, 255, 255, 1)"></rect>
           </svg>
         </div>
-        <div class="getreview-widget__iframe-container ${optionsGetreview.lightbox === 'iframe' ? '' : 'dis-none'}">
-          <iframe width="${optionsGetreview.iframeWidth ? optionsGetreview.iframeWidth : 260}" height="${optionsGetreview.iframeHeight ? optionsGetreview.iframeHeight : 145}"  ${optionsGetreview.lightbox === 'iframe' ? `src="https://youtube.com/embed/${idVideoIframe}?autoplay=1"` : ''}  frameborder="0" allow="autoplay" allowfullscreen></iframe>
-        </div>
+        <div id="getreview-widget-iframe" class="getreview-widget__iframe-container ${optionsGetreview.lightbox === 'iframe' ? '' : 'dis-none'}"></div>
       </div>
     `);
 
@@ -285,13 +279,6 @@ window.addEventListener("DOMContentLoaded", function () {
   const widgetVideoWrap = document.querySelector(".getreview-widget__video-wrap");
   const widgetVideoContainer = widget.querySelector(".getreview__video-container.iframe");
   const widgetVideoWrapClose = widgetVideoWrap.querySelector(".getreview-widget__close");
-
-  /* Настройки glightbox */
-  if (optionsGetreview.lightbox === "glightbox") {
-    const lightbox = GLightbox({
-      selector: '.glightbox-widget'
-    });
-  }
 
   if (optionsGetreview.borderHover && optionsGetreview.borderHover !== "") {
     document.documentElement.style.setProperty('--hover-getreview-border', `${optionsGetreview.borderHover}`);
@@ -448,12 +435,39 @@ window.addEventListener("DOMContentLoaded", function () {
 
       widget.classList.add("dis-none");
       widgetVideoWrap.classList.add("active");
+
+      if (player) {
+        player.playVideo();
+      } else {
+        player = new YT.Player('getreview-widget-iframe', {
+
+          playerVars: {
+            'controls': 0,
+            'showinfo': 0,
+            'rel': 0,
+            'autoplay': 0,
+            'playsinline': 1
+          },
+          width: optionsGetreview.iframeWidth ? optionsGetreview.iframeWidth : 260,
+          height: optionsGetreview.iframeHeight ? optionsGetreview.iframeHeight : 145,
+          videoId: idVideoIframe,
+          events: {
+            'onReady': onPlayerReady,
+          }
+        });
+      }
+
+      function onPlayerReady() {
+        player.playVideo();
+      }
     })
   }
 
   widgetVideoWrapClose && widgetVideoWrapClose.addEventListener("click", () => {
     widget.classList.remove("dis-none");
     widgetVideoWrap.classList.remove("active");
+
+    player.pauseVideo();
   })
 
   window.addEventListener("resize", () => {
