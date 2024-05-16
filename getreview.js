@@ -294,14 +294,14 @@ window.addEventListener("DOMContentLoaded", function () {
             <div class="preloader__round"></div>
           </div>
         </div>
-        <div id="getreview-widget-iframe" class="getreview-widget__iframe-container ${optionsGetreview.lightbox === 'iframe' ? '' : 'dis-none'}"></div>
+        <div id="getreview-widget-iframe" class="getreview-widget__iframe-container ${(optionsGetreview.lightbox === 'iframe' || optionsGetreview.lightboxMobile === 'iframe') ? '' : 'dis-none'}"></div>
       </div>
     `);
 
   const widget = document.querySelector(".getreview-widget");
   const widgetClose = widget && widget.querySelector(".getreview-widget__close");
   const widgetVideoWrap = document.querySelector(".getreview-widget__video-wrap");
-  const widgetVideoContainer = widget.querySelector(".getreview__video-container.iframe");
+  const widgetVideoContainer = widget.querySelector(".getreview__video-container");
   const widgetVideoWrapClose = widgetVideoWrap.querySelector(".getreview-widget__close");
 
   if (optionsGetreview.borderHover && optionsGetreview.borderHover !== "") {
@@ -449,10 +449,11 @@ window.addEventListener("DOMContentLoaded", function () {
 
   mobileBottomIndentationHandler();
 
-  if (optionsGetreview.lightbox === 'iframe') {
-    widgetVideoContainer && widgetVideoContainer.addEventListener(("click"), (e) => {
-      e.preventDefault();
+  //if () {
+  widgetVideoContainer && widgetVideoContainer.addEventListener(("click"), (e) => {
+    e.preventDefault();
 
+    if (e.target.closest(".iframe")) {
       widget.classList.add("dis-none");
       widgetVideoWrap.classList.add("active");
 
@@ -494,8 +495,21 @@ window.addEventListener("DOMContentLoaded", function () {
 
         player.playVideo();
       }
-    })
+    }
+  })
+  //}
+
+  function lightboxReverse() {
+    if (optionsGetreview.lightbox === 'iframe' && optionsGetreview.lightboxMobile === 'videotube' && getDeviceType() === "mobile") {
+      widgetVideoContainer.classList.remove("iframe");
+      widgetVideoContainer.classList.add("tube");
+    } else if (optionsGetreview.lightbox === 'videotube' && optionsGetreview.lightboxMobile === 'iframe' && getDeviceType() === "mobile") {
+      widgetVideoContainer.classList.add("iframe");
+      widgetVideoContainer.classList.remove("tube");
+    }
   }
+
+  lightboxReverse();
 
   widgetVideoWrapClose && widgetVideoWrapClose.addEventListener("click", () => {
     widget.classList.remove("dis-none");
