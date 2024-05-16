@@ -1,5 +1,6 @@
 :root {
   --hover-getreview-border: rgb(25 0 84);
+  --preloader-color: rgb(25 0 84);
 }
 
 .dis-none {
@@ -9,6 +10,7 @@
 .getreview-widget {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   position: fixed;
+  z-index: 999;
   width: 130px;
   height: 195px;
   min-width: 130px;
@@ -16,7 +18,7 @@
   border: 3px solid rgba(255, 255, 255, 1);
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
   border-radius: 20px;
-  transition: transform 0.2s ease, border-color 0.3s ease, opacity 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.3s ease, opacity 0.4s ease;
   opacity: 0;
   overflow: hidden;
   cursor: pointer;
@@ -50,13 +52,33 @@
   -webkit-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+  width: 100% !important;
+  height: 100%;
+  opacity: 1 !important;
+}
+
+.getreview__video-container::after {
+  content: '';
+  position: absolute;
+  z-index: 25;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(42, 42, 42, 0) 0%, rgba(10, 10, 10, 0.88) 100%);
+  pointer-events: none;
+}
+
+.getreview__video-container {
+  display: block;
+  position: relative;
   width: 100%;
   height: 100%;
 }
 
 .getreview-widget__text {
   position: absolute;
-  top: 14px;
+  bottom: 14px;
   left: 16px;
   right: 8px;
   z-index: 50;
@@ -164,7 +186,7 @@
   }
 
   .getreview-widget__text {
-    top: 7px;
+    bottom: 8px;
     left: 8px;
   }
 }
@@ -174,7 +196,7 @@
 .videotube-modal-overlay {
   color: #fff;
   display: none;
-  z-index: 995;
+  z-index: 9999;
   opacity: 0;
   top: 0;
   left: 0;
@@ -248,6 +270,7 @@
 
 .getreview-widget__video-wrap {
   position: fixed;
+  z-index: 999;
   transform: translateY(150%);
 }
 
@@ -261,7 +284,132 @@
   right: initial;
 }
 
+.getreview-widget__iframe-container {
+  position: relative;
+}
+
 .getreview-widget__iframe-container iframe {
   max-width: 100%;
   max-height: 100%;
+}
+
+#videotube-modal-container {
+  display: none;
+}
+
+/* preloader */
+
+@keyframes preloader-inside-white {
+  0% {
+    -webkit-transform: scale(0, 0);
+    -moz-transform: scale(0, 0);
+    -ms-transform: scale(0, 0);
+    -o-transform: scale(0, 0);
+    transform: scale(0, 0);
+  }
+
+  100% {
+    -webkit-transform: scale(1, 1);
+    -moz-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes preloader-inside-orange {
+  0% {
+    -webkit-transform: scale(0, 0);
+    -moz-transform: scale(0, 0);
+    -ms-transform: scale(0, 0);
+    -o-transform: scale(0, 0);
+    transform: scale(0, 0);
+  }
+
+  30% {
+    -webkit-transform: scale(0, 0);
+    -moz-transform: scale(0, 0);
+    -ms-transform: scale(0, 0);
+    -o-transform: scale(0, 0);
+    transform: scale(0, 0);
+  }
+
+  100% {
+    -webkit-transform: scale(1, 1);
+    -moz-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+    transform: scale(1, 1);
+  }
+}
+
+.preloader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.preloader_active {
+  display: flex;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.preloader__container {
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
+
+.preloader_iframe .preloader__container {
+  width: 70px;
+  height: 70px;
+}
+
+.preloader__round {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50px;
+}
+
+.preloader_iframe .preloader__round {
+  width: 70px;
+  height: 70px;
+}
+
+.preloader__round::after,
+.preloader__round::before {
+  content: '';
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50px;
+}
+
+.preloader_iframe .preloader__round::after,
+.preloader_iframe .preloader__round::before {
+  width: 70px;
+  height: 70px;
+}
+
+.preloader__round::after {
+  background: white;
+  animation: preloader-inside-white 1s ease-in-out infinite;
+}
+
+.preloader__round::before {
+  z-index: 10;
+  background: var(--preloader-color);
+  animation: preloader-inside-orange 1s ease-in-out infinite;
 }

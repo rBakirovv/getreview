@@ -190,10 +190,24 @@ const init = () => {
         <div id="videotube-modal-close">
           <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" xml:space="preserve"><g><g><path d="M505.943,6.058c-8.077-8.077-21.172-8.077-29.249,0L6.058,476.693c-8.077,8.077-8.077,21.172,0,29.249C10.096,509.982,15.39,512,20.683,512c5.293,0,10.586-2.019,14.625-6.059L505.943,35.306C514.019,27.23,514.019,14.135,505.943,6.058z"></path></g></g><g><g><path d="M505.942,476.694L35.306,6.059c-8.076-8.077-21.172-8.077-29.248,0c-8.077,8.076-8.077,21.171,0,29.248l470.636,470.636c4.038,4.039,9.332,6.058,14.625,6.058c5.293,0,10.587-2.019,14.624-6.057C514.018,497.866,514.018,484.771,505.942,476.694z"></path></g></g></svg>
         </div>
+        <div class="preloader preloader_active">
+          <div class="preloader__container">
+            <div class="preloader__round"></div>
+          </div>
+        </div>
         <div id="videotube-modal-container">
         </div>
       `,
       );
+    }
+
+    const preloader = document.querySelector(".preloader");
+    const preloaderRound = preloader && preloader.querySelector(".preloader__round");
+
+    preloaderRound.style.background = optionsGetreview.preloaderColor && optionsGetreview.preloaderColor !== "" ? optionsGetreview.preloaderColor : "rgb(25 0 84)";
+
+    if (optionsGetreview.preloaderColor && optionsGetreview.preloaderColor !== "") {
+      document.documentElement.style.setProperty('--preloader-color', `${optionsGetreview.preloaderColor}`);
     }
 
     if (player) {
@@ -212,10 +226,16 @@ const init = () => {
         events: {
           'onReady': onPlayerReady,
         }
-      });
+      })
     }
 
     function onPlayerReady() {
+      const videotubeModalContainer = document.querySelector("#videotube-modal-container");
+
+      videotubeModalContainer.style.display = "initial";
+
+      preloader.classList.remove("preloader_active");
+
       player.playVideo();
     }
 
@@ -269,13 +289,17 @@ window.addEventListener("DOMContentLoaded", function () {
               fill="rgba(255, 255, 255, 1)"></rect>
           </svg>
         </div>
+        <div class="preloader preloader_iframe">
+          <div class="preloader__container">
+            <div class="preloader__round"></div>
+          </div>
+        </div>
         <div id="getreview-widget-iframe" class="getreview-widget__iframe-container ${optionsGetreview.lightbox === 'iframe' ? '' : 'dis-none'}"></div>
       </div>
     `);
 
   const widget = document.querySelector(".getreview-widget");
   const widgetClose = widget && widget.querySelector(".getreview-widget__close");
-  const widgetVideo = widget && widget.querySelector("video");
   const widgetVideoWrap = document.querySelector(".getreview-widget__video-wrap");
   const widgetVideoContainer = widget.querySelector(".getreview__video-container.iframe");
   const widgetVideoWrapClose = widgetVideoWrap.querySelector(".getreview-widget__close");
@@ -284,13 +308,9 @@ window.addEventListener("DOMContentLoaded", function () {
     document.documentElement.style.setProperty('--hover-getreview-border', `${optionsGetreview.borderHover}`);
   }
 
-  var videoSource = widgetVideo.querySelector("source");
-
-  if (typeof videoSource.tagName === "string" && videoSource.tagName === "SOURCE") {
-    setTimeout(() => {
-      widget.classList.add("loaded");
-    }, 200)
-  }
+  setTimeout(() => {
+    widget.classList.add("loaded");
+  }, optionsGetreview.timerLoading ? optionsGetreview.timerLoading : 200)
 
   widgetClose && widgetClose.addEventListener("click", (e) => {
     widget.classList.add("dis-none");
@@ -436,7 +456,19 @@ window.addEventListener("DOMContentLoaded", function () {
       widget.classList.add("dis-none");
       widgetVideoWrap.classList.add("active");
 
+      const widgetVideoPreloader = widgetVideoWrap && widgetVideoWrap.querySelector(".preloader");
+      const widgetVideoPreloaderRound = widgetVideoPreloader && widgetVideoPreloader.querySelector(".preloader__round");
+
+      widgetVideoPreloaderRound.style.background = optionsGetreview.preloaderColor && optionsGetreview.preloaderColor !== "" ? optionsGetreview.preloaderColor : "rgb(25 0 84)";
+
+      if (optionsGetreview.preloaderColor && optionsGetreview.preloaderColor !== "") {
+        document.documentElement.style.setProperty('--preloader-color', `${optionsGetreview.preloaderColor}`);
+      }
+
+      widgetVideoPreloader.classList.add("preloader_active");
+
       if (player) {
+        widgetVideoPreloader.classList.remove("preloader_active");
         player.playVideo();
       } else {
         player = new YT.Player('getreview-widget-iframe', {
@@ -458,6 +490,8 @@ window.addEventListener("DOMContentLoaded", function () {
       }
 
       function onPlayerReady() {
+        widgetVideoPreloader.classList.remove("preloader_active");
+
         player.playVideo();
       }
     })
